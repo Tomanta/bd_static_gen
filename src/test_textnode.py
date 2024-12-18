@@ -3,6 +3,16 @@ import unittest
 from textnode import TextNode, TextType
 
 class TestTextNode(unittest.TestCase):
+    def test_can_create_text_node_without_url(self):
+        node = TextNode("This is a text node", TextType.CODE)
+        self.assertEqual(TextNode, type(node))
+        self.assertIsNone(node.url)
+
+    def test_can_create_text_node_with_url(self):
+        node = TextNode("This is a text node", TextType.ITALIC, url="Test")
+        self.assertEqual(TextNode, type(node))
+        self.assertIsNotNone(node.url)
+
     def test_eq(self):
         node = TextNode("This is a text node", TextType.BOLD)
         node2 = TextNode("This is a text node", TextType.BOLD)
