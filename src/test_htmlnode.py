@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 
 class TestHTMLNode(unittest.TestCase):
@@ -29,7 +29,7 @@ class TestHTMLNode(unittest.TestCase):
 
 class TestLeafNode(unittest.TestCase):
     def test_can_create(self):
-        node = LeafNode("p", "text", None, None)
+        node = LeafNode("p", "text")
         self.assertEqual(LeafNode, type(node))
 
     def test_no_value_error(self):
@@ -45,6 +45,48 @@ class TestLeafNode(unittest.TestCase):
         node = LeafNode(tag="p",value="paragraph")
         expected = "<p>paragraph</p>"
         self.assertEqual(expected, node.to_html())
+
+
+class TestParentNode(unittest.TestCase):
+    def test_child_basic(self):
+        node = ParentNode("p", [
+            LeafNode("b", "Bold text"),
+            LeafNode(None, "Normal text"),
+            LeafNode("i", "italic text"),
+            LeafNode(None, "Normal text")
+
+        ],
+        )
+        expected = "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>"
+        self.assertEqual(expected, node.to_html())
+    
+    def test_empty_children(self):
+        node = ParentNode("p", [])
+        self.assertRaises(ValueError,node.to_html)
+
+    def test_empty_tag(self):
+        node = ParentNode('', [LeafNode("b", "Bold text"),])
+        self.assertRaises(ValueError,node.to_html)
+
+    def test_one_child(self):
+        node = ParentNode('p', [LeafNode("b", "Bold text"),])
+        expected = "<p><b>Bold text</b></p>"
+        self.assertEqual(expected, node.to_html())
+
+    def test_nested_parents(self):
+        inner_parent = ParentNode('b', [LeafNode("i", "italic text")])
+        outer_node = ParentNode('p', [inner_parent])
+        expected = "<p><b><i>italic text</i></b></p>"
+        self.assertEqual(expected, outer_node.to_html())
+
+    def test_no_tag(self):
+        node = ParentNode(None, [LeafNode("b", "Bold text"),])
+        self.assertRaises(ValueError,node.to_html)
+
+    def test_no_children(self):
+        node = ParentNode("p", None)
+        self.assertRaises(ValueError,node.to_html)
+
 
 if __name__ == "__main__":
     unittest.main()
