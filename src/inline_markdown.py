@@ -32,5 +32,57 @@ def extract_markdown_links(text):
     link_pattern = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
     return re.findall(link_pattern, text)
 
-# r"(?<!!) \[([^\[\[]*)\] \(([^\(\)]*\)"
-# r"(?<!!) \[([^\[\]]*)\] \(([^\(\)]*)\)"
+def split_nodes_image(old_nodes):
+    new_nodes = []
+    for old_node in old_nodes:
+
+        if old_node.text_type != TextType.TEXT: # Not a text node
+            new_nodes.append(old_node)
+            continue
+        
+        images = extract_markdown_images(old_node.text)
+
+        if len(images) == 0: # empty, no processing
+            new_nodes.append(old_node)
+            continue
+        
+        remaining_text = old_node.text
+
+        for image in images:
+            split_text = remaining_text.split(f"![{image[0]}]({image[1]})", 1)
+            if split_text[0] != "":
+                new_nodes.append(TextNode(split_text[0], TextType.TEXT))
+            new_nodes.append(TextNode(image[0], TextType.IMAGE, url=image[1]))
+            remaining_text = split_text[1]
+        
+        if remaining_text != "":
+            new_nodes.append(TextNode(split_text[0], TextType.TEXT))
+
+    return new_nodes
+
+def split_nodes_link(old_nodes):
+    new_nodes = []
+    for old_node in old_nodes:
+
+        if old_node.text_type != TextType.TEXT: # Not a text node
+            new_nodes.append(old_node)
+            continue
+
+        links = extract_markdown_links(old_node.text)
+        
+        if len(links) == 0: # empty, no processing
+            new_nodes.append(old_node)
+            continue
+        
+        remaining_text = old_node.text
+        for link in links:
+            split_text = remaining_text.split(f"[{link[0]}]({link[1]})", 1)
+            if split_text[0] != "":
+                new_nodes.append(TextNode(split_text[0], TextType.TEXT))
+            new_nodes.append(TextNode(link[0], TextType.LINK, url=link[1]))
+            remaining_text = split_text[1]
+        
+        if remaining_text != "":
+            new_nodes.append(TextNode(split_text[0], TextType.TEXT))
+
+    return new_nodes
