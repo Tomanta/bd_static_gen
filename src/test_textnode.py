@@ -1,6 +1,7 @@
 import unittest
 
-from textnode import TextNode, TextType
+from textnode import TextNode, TextType, text_node_to_html_node
+from htmlnode import LeafNode
 
 class TestTextNode(unittest.TestCase):
     def test_can_create_text_node_without_url(self):
@@ -35,6 +36,42 @@ class TestTextNode(unittest.TestCase):
         self.assertNotEqual(node, node2)
 
 
+class testTextToHTML(unittest.TestCase):
+    # def test_raises_error_on_invalid(self):
+    #     node = TextNode("test", TextType.None)
+    #     self.assertRaises(ValueError, main.text_node_to_html_node, node)
+
+    def test_text_node(self):
+        node = TextNode("test", TextType.TEXT)
+        expected = LeafNode(None, "test")
+        self.assertEqual(expected, text_node_to_html_node(node))
+
+    def test_bold_node(self):
+        node = TextNode("test", TextType.BOLD)
+        expected = LeafNode('b', "test")
+        self.assertEqual(expected, text_node_to_html_node(node))
+###################
+    def test_italic_node(self):
+        node = TextNode("test", TextType.ITALIC)
+        expected = LeafNode('i', "test")
+        self.assertEqual(expected, text_node_to_html_node(node))
+
+    def test_code_node(self):
+        node = TextNode("test", TextType.CODE)
+        expected = LeafNode('code', "test")
+        self.assertEqual(expected, text_node_to_html_node(node))
+
+    def test_link_node(self):
+        node = TextNode("test", TextType.LINK, url='http://fakelink.com')
+        expected = LeafNode('a', "test", props={"href":"http://fakelink.com"})
+        self.assertEqual(expected, text_node_to_html_node(node))
+
+    def test_image_node(self):
+        node = TextNode("img_alt_text", TextType.IMAGE,url="image.jpg")
+        expected = LeafNode('img', None, props={"src":"image.jpg", "alt": "img_alt_text"})
+        self.assertEqual(expected, text_node_to_html_node(node))
+
 
 if __name__ == "__main__":
     unittest.main()
+
