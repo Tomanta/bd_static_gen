@@ -50,7 +50,7 @@ class testTextToHTML(unittest.TestCase):
         node = TextNode("test", TextType.BOLD)
         expected = LeafNode('b', "test")
         self.assertEqual(expected, text_node_to_html_node(node))
-###################
+
     def test_italic_node(self):
         node = TextNode("test", TextType.ITALIC)
         expected = LeafNode('i', "test")
