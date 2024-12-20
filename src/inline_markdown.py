@@ -96,3 +96,5 @@ def text_to_textnodes(text):
     nodes = split_nodes_image(nodes)
 
     return nodes
+
+
