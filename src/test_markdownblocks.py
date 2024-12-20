@@ -1,5 +1,13 @@
 import unittest
-from markdownblocks import markdown_to_blocks, block_to_block_type
+from markdownblocks import markdown_to_blocks, block_to_block_type, block_to_html
+from htmlnode import ParentNode, LeafNode
+
+class TestBlockToHTML(unittest.TestCase):
+    def test_block_to_html_paragraph(self):
+        markdown = "This is some basic text."
+        expected_html_node = ParentNode('div', children = [LeafNode('p', markdown)])
+      
+        self.assertEqual(expected_html_node, block_to_html(markdown))
 
 class TestMarkdownBlockSplit(unittest.TestCase):
     def test_basic_split(self):
