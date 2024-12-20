@@ -5,9 +5,16 @@ from htmlnode import ParentNode, LeafNode
 class TestBlockToHTML(unittest.TestCase):
     def test_block_to_html_paragraph(self):
         markdown = "This is some basic text."
-        expected_html_node = ParentNode('div', children = [LeafNode('p', markdown)])
-      
+        expected_html_node = ParentNode('div', children = [
+            ParentNode('p', children = [
+                LeafNode(value=markdown)
+            ])
+            ])
+        print(f"\nDEBUG Expected: {expected_html_node}")
+        print(f"\nDEBUG Actual: {block_to_html(markdown)}")
         self.assertEqual(expected_html_node, block_to_html(markdown))
+
+
 
 class TestMarkdownBlockSplit(unittest.TestCase):
     def test_basic_split(self):
