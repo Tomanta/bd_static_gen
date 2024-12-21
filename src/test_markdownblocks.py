@@ -56,7 +56,6 @@ class TestBlockToHTML(unittest.TestCase):
 
         self.assertEqual(expected_html_node, block_to_html(markdown))
 
-
     def test_unordered_list_to_html(self):
         markdown = """* Item 1\n- Item 2"""
         expected_html_node = ParentNode('div', children = [
