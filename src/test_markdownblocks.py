@@ -8,13 +8,65 @@ class TestBlockToHTML(unittest.TestCase):
         expected_html_node = ParentNode('div', children = [
             ParentNode('p', children = [
                 LeafNode(value=markdown)
+                ])
             ])
+        self.assertEqual(expected_html_node, block_to_html(markdown))
+
+    def test_quote_to_html(self):
+        markdown = """>Quote line 1
+>Quote line 2
+"""
+        expected_html_node = ParentNode('div', children = [
+            ParentNode('blockquote', children = [
+                LeafNode(None, 'Quote line 1'), LeafNode(None, 'Quote line 2')
             ])
-        print(f"\nDEBUG Expected: {expected_html_node}")
-        print(f"\nDEBUG Actual: {block_to_html(markdown)}")
+        ])
+        self.assertEqual(expected_html_node, block_to_html(markdown))
+
+    def test_code_block(self):
+        markdown = """```\nCode block line 1\nCode block line 2\n```"""
+        expected_html_node = ParentNode('div', children = [ParentNode('pre', children = [
+            ParentNode('code', children=[
+                LeafNode(None,'Code block line 1'),
+                LeafNode(None,'Code block line 2')
+            ])
+        ])])
         self.assertEqual(expected_html_node, block_to_html(markdown))
 
 
+    def test_header_level_3(self):
+        markdown = "### Header level 3"
+        expected_html_node = ParentNode('div', children = [
+            ParentNode('h3', children = [
+                LeafNode(None, 'Header level 3')
+            ])
+        ])
+
+        self.assertEqual(expected_html_node, block_to_html(markdown))
+
+
+    def test_ordered_list_to_html(self):
+        markdown = """1. Item 1\n2. Item 2"""
+        expected_html_node = ParentNode('div', children = [
+            ParentNode('ol', children = [
+                ParentNode('li', children = [LeafNode(None, 'Item 1')]),
+                ParentNode('li', children = [LeafNode(None, 'Item 2')])
+            ])
+        ])
+
+        self.assertEqual(expected_html_node, block_to_html(markdown))
+
+
+    def test_unordered_list_to_html(self):
+        markdown = """* Item 1\n- Item 2"""
+        expected_html_node = ParentNode('div', children = [
+            ParentNode('ul', children = [
+                ParentNode('li', children = [LeafNode(None, 'Item 1')]),
+                ParentNode('li', children = [LeafNode(None, 'Item 2')])
+            ])
+        ])
+
+        self.assertEqual(expected_html_node, block_to_html(markdown))
 
 class TestMarkdownBlockSplit(unittest.TestCase):
     def test_basic_split(self):
