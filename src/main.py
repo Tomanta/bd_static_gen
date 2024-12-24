@@ -1,8 +1,20 @@
 from textnode import TextNode, TextType
 from htmlnode import LeafNode
 
+from convert_md_to_html import generate_page
+
 import os
 import shutil
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    for item in os.listdir(dir_path_content):
+        if not os.path.isfile(os.path.join(dir_path_content,item)):
+            generate_pages_recursive(os.path.join(dir_path_content, item), template_path, os.path.join(dest_dir_path, item))
+        else:
+            if item.endswith('.md'):
+                source = os.path.join(dir_path_content, item)
+                destination = os.path.join(dest_dir_path, f"{item[:-3]}.html")
+                generate_page(source, template_path, destination)
 
 def clean_folder_if_exists(path):
     if os.path.exists(path):
@@ -41,7 +53,9 @@ def text_node_to_html_node(text_node: TextNode):
 def main():
     static_root = './static'
     public_root = './public'
+    clean_folder_if_exists(public_root)
     copy_folder(static_root, public_root)
+    generate_pages_recursive('./content', 'template.html', './public')
 
 if __name__ == "__main__":
     main()

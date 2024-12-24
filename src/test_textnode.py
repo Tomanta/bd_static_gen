@@ -68,7 +68,7 @@ class testTextToHTML(unittest.TestCase):
 
     def test_image_node(self):
         node = TextNode("img_alt_text", TextType.IMAGE,url="image.jpg")
-        expected = LeafNode('img', None, props={"src":"image.jpg", "alt": "img_alt_text"})
+        expected = LeafNode('img', "", props={"src":"image.jpg", "alt": "img_alt_text"})
         self.assertEqual(expected, text_node_to_html_node(node))
 
 

@@ -12,7 +12,7 @@ def text_to_children(markdown_text):
 def generate_blockquote(markdown_block):
     text_nodes = []
     for line in markdown_block.split("\n"):
-        text_nodes.extend(text_to_children(line[1:]))
+        text_nodes.extend(text_to_children(line[1:].strip()))
     return ParentNode('blockquote', children=text_nodes)
 
 def generate_header(markdown_block):
@@ -44,7 +44,7 @@ def generate_ordered_list(markdown):
         ))
     return ParentNode("ol", children=list_nodes)
 
-def block_to_html(markdown):
+def markdown_to_html_node(markdown):
     blocks = markdown_to_blocks(markdown) # Create blocks
     # For each block, determine the type
     # Based on the type, create a new HTMLNode

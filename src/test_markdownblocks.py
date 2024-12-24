@@ -1,16 +1,16 @@
 import unittest
-from markdownblocks import markdown_to_blocks, block_to_block_type, block_to_html
+from markdownblocks import markdown_to_blocks, block_to_block_type, markdown_to_html_node
 from htmlnode import ParentNode, LeafNode
 
 class TestBlockToHTML(unittest.TestCase):
-    def test_block_to_html_paragraph(self):
+    def test_markdown_to_html_node_paragraph(self):
         markdown = "This is some basic text."
         expected_html_node = ParentNode('div', children = [
             ParentNode('p', children = [
                 LeafNode(value=markdown)
                 ])
             ])
-        self.assertEqual(expected_html_node, block_to_html(markdown))
+        self.assertEqual(expected_html_node, markdown_to_html_node(markdown))
 
     def test_quote_to_html(self):
         markdown = """>Quote line 1
@@ -21,7 +21,7 @@ class TestBlockToHTML(unittest.TestCase):
                 LeafNode(None, 'Quote line 1'), LeafNode(None, 'Quote line 2')
             ])
         ])
-        self.assertEqual(expected_html_node, block_to_html(markdown))
+        self.assertEqual(expected_html_node, markdown_to_html_node(markdown))
 
     def test_code_block(self):
         markdown = """```\nCode block line 1\nCode block line 2\n```"""
@@ -31,7 +31,7 @@ class TestBlockToHTML(unittest.TestCase):
                 LeafNode(None,'Code block line 2')
             ])
         ])])
-        self.assertEqual(expected_html_node, block_to_html(markdown))
+        self.assertEqual(expected_html_node, markdown_to_html_node(markdown))
 
 
     def test_header_level_3(self):
@@ -42,7 +42,7 @@ class TestBlockToHTML(unittest.TestCase):
             ])
         ])
 
-        self.assertEqual(expected_html_node, block_to_html(markdown))
+        self.assertEqual(expected_html_node, markdown_to_html_node(markdown))
 
 
     def test_ordered_list_to_html(self):
@@ -54,7 +54,7 @@ class TestBlockToHTML(unittest.TestCase):
             ])
         ])
 
-        self.assertEqual(expected_html_node, block_to_html(markdown))
+        self.assertEqual(expected_html_node, markdown_to_html_node(markdown))
 
     def test_unordered_list_to_html(self):
         markdown = """* Item 1\n- Item 2"""
@@ -65,7 +65,7 @@ class TestBlockToHTML(unittest.TestCase):
             ])
         ])
 
-        self.assertEqual(expected_html_node, block_to_html(markdown))
+        self.assertEqual(expected_html_node, markdown_to_html_node(markdown))
 
 class TestMarkdownBlockSplit(unittest.TestCase):
     def test_basic_split(self):

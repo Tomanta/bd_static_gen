@@ -16,7 +16,7 @@ class HTMLNode:
         for key, value in self.props.items():
             prop_list.append(f'{key}="{value}"')
         
-        return " ".join(prop_list).strip()
+        return " " + " ".join(prop_list).strip()
     
     def __repr__(self):
         return(f"HTMLNode({self.tag}, {self.value}, {self.children}, {self.props})")
@@ -39,7 +39,7 @@ class LeafNode(HTMLNode):
             raise ValueError("value is required")
         if self.tag is None:
             return self.value
-        return f"<{self.tag}>{self.value}</{self.tag}>"
+        return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
 
     def __repr__(self):
         return(f"LeafNode({self.tag}, {self.value}, {self.props})")
